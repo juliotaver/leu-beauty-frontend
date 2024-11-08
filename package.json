@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-transform-dynamic-import": "^7.25.9",
+    "@babel/plugin-transform-json-strings": "^7.25.9",
+    "@babel/plugin-transform-optional-catch-binding": "^7.25.9",
+    "@babel/plugin-transform-unicode-property-regex": "^7.25.9",
+    "@headlessui/react": "^2.2.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -10,11 +15,22 @@
     "@types/node": "^16.18.119",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "axios": "^1.7.7",
+    "child_process": "^1.0.2",
+    "firebase": "^11.0.1",
+    "fs": "^0.0.1-security",
+    "html-webpack-plugin": "^5.6.3",
+    "html5-qrcode": "^2.3.8",
+    "path": "^0.12.7",
+    "qrcode.react": "^4.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
+    "tailwindcss": "^3.4.14",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpack": "^5.96.1",
+    "webpack-dev-server": "^5.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,5 +55,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47"
   }
 }
