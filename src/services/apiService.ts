@@ -6,6 +6,8 @@ const API_URL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:3001/api'
   : 'https://api.leubeautylab.com/api';
 
+console.log('API URL:', API_URL);
+
 export interface Cliente {
   id: string;
   nombre: string;
@@ -20,6 +22,8 @@ export interface Cliente {
 export const apiService = {
   async crearCliente(cliente: Omit<Cliente, 'id'>): Promise<Cliente> {
     try {
+      console.log('Creando cliente en Firestore:', cliente);
+
       // Primero crear en Firestore
       const docRef = await addDoc(collection(db, 'clientes'), {
         ...cliente,
@@ -35,13 +39,15 @@ export const apiService = {
       return clienteCompleto;
     } catch (error) {
       console.error('Error creando cliente:', error);
-      throw new Error('Error al crear cliente');
+      throw error;
     }
   },
 
   async generarPase(cliente: Cliente): Promise<string> {
     try {
+      console.log('Generando pase para:', cliente);
       const response = await axios.post(`${API_URL}/passes/generate`, cliente);
+      console.log('Respuesta del servidor:', response.data);
       if (!response.data.success) {
         throw new Error(response.data.error || 'Error generando pase');
       }

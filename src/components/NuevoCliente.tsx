@@ -23,16 +23,15 @@ const NuevoCliente: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
-    setPassUrl('');
-    setShowQR(false);
   
     try {
+      console.log('Iniciando registro de cliente...');
+      
       if (!formData.nombre.trim() || !formData.email.trim()) {
         throw new Error('Por favor completa los campos obligatorios');
       }
   
-      // Crear el cliente en Firestore primero
-      const nuevoCliente = await apiService.crearCliente({
+      const nuevoCliente = {
         nombre: formData.nombre.trim(),
         email: formData.email.toLowerCase().trim(),
         telefono: formData.telefono.trim(),
@@ -40,13 +39,18 @@ const NuevoCliente: React.FC = () => {
         ultimaVisita: new Date(),
         proximaRecompensa: "Postre Gratis (faltan 5 visitas)",
         recompensasCanjeadas: []
-      });
+      };
   
-      // Generar el pase con el ID real de Firestore
-      const passUrl = await apiService.generarPase(nuevoCliente);
+      console.log('Datos del cliente:', nuevoCliente);
+  
+      // Crear el cliente en Firestore primero
+      const clienteCreado = await apiService.crearCliente(nuevoCliente);
+      console.log('Cliente creado en Firestore:', clienteCreado);
+  
+      // Generar el pase
+      const passUrl = await apiService.generarPase(clienteCreado);
+      console.log('Pase generado:', passUrl);
       
-      setPassUrl(passUrl);
-      setShowQR(true);
       setMessage('¡Cliente registrado exitosamente!');
       
       // Limpiar formulario
@@ -56,6 +60,7 @@ const NuevoCliente: React.FC = () => {
         telefono: ''
       });
     } catch (error) {
+      console.error('Error detallado:', error);
       setMessage(error instanceof Error ? error.message : 'Error al registrar cliente');
     } finally {
       setLoading(false);
