@@ -82,7 +82,7 @@ const NuevoCliente: React.FC = () => {
     if (!passUrl) return '';
     return `${window.location.protocol}//${window.location.hostname}${passUrl}`;
   };
-  
+
   return (
     <div className="min-h-screen bg-leu-cream flex flex-col">
       <div className="max-w-md mx-auto w-full px-4 py-8">
@@ -161,7 +161,7 @@ const NuevoCliente: React.FC = () => {
             <div className="mt-6">
               <div className="text-center bg-gray-50 rounded-lg p-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  ¡Cliente registrado exitosamente!
+                  ¡Cliente registrado con exito!
                 </h3>
                 <div className="space-y-6">
                   <div className="bg-white p-4 rounded-lg shadow-inner inline-block">
