@@ -9,6 +9,7 @@ import {
   Timestamp 
 } from 'firebase/firestore';
 import { Cliente } from '../types';
+import axios from 'axios';
 
 export const clienteService = {
   async crearCliente(cliente: Omit<Cliente, 'id'>): Promise<string> {
@@ -86,6 +87,9 @@ export const clienteService = {
         proximaRecompensa
       });
     }
+
+    // Enviar solicitud al backend para enviar notificación push
+    await axios.post(`https://api.leubeautylab.com/api/push/update-pass`, { clienteId: id });
   },
 
   async obtenerClientes(): Promise<Cliente[]> {
