@@ -69,15 +69,15 @@ export const clienteService = {
     } else {
       // Actualizar normalmente
       if (nuevasVisitas < 5) {
-        proximaRecompensa = `Postre Gratis (faltan ${5 - nuevasVisitas} visitas)`;
+        proximaRecompensa = `Postre Gratis`;
       } else if (nuevasVisitas < 10) {
-        proximaRecompensa = `Bebida Gratis (faltan ${10 - nuevasVisitas} visitas)`;
+        proximaRecompensa = `Bebida Gratis`;
       } else if (nuevasVisitas < 15) {
-        proximaRecompensa = `Gel Liso en Manos (faltan ${15 - nuevasVisitas} visitas)`;
+        proximaRecompensa = `Gel Liso en Manos`;
       } else if (nuevasVisitas < 20) {
-        proximaRecompensa = `Gel Liso en Pies (faltan ${20 - nuevasVisitas} visitas)`;
+        proximaRecompensa = `Gel Liso en Pies`;
       } else {
-        proximaRecompensa = `10% Descuento en Uñas (faltan ${25 - nuevasVisitas} visitas)`;
+        proximaRecompensa = `10% Descuento en Uñas`;
       }
 
       await updateDoc(docRef, {
