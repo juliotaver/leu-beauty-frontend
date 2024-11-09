@@ -18,7 +18,6 @@ const AdminDashboard: React.FC = () => {
     clientesNuevosMes: 0
   });
   const [busqueda, setBusqueda] = useState('');
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     cargarDatos();
@@ -52,7 +51,7 @@ const AdminDashboard: React.FC = () => {
         clientesNuevosMes
       });
 
-      setLoading(false);
+      
     } catch (error) {
       console.error('Error al cargar datos:', error);
     }

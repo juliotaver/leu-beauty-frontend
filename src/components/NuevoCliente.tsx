@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { apiService, Cliente } from '../services/apiService';
+import { apiService } from '../services/apiService';
 
 interface FormData {
   nombre: string;
@@ -16,21 +16,23 @@ const NuevoCliente: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [passUrl, setPassUrl] = useState<string>('');
   const [showQR, setShowQR] = useState(false);
+  const [passUrl, setPassUrl] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
-  
+    setShowQR(false);
+    setPassUrl('');
+
     try {
       console.log('Iniciando registro de cliente...');
       
       if (!formData.nombre.trim() || !formData.email.trim()) {
         throw new Error('Por favor completa los campos obligatorios');
       }
-  
+
       const nuevoCliente = {
         nombre: formData.nombre.trim(),
         email: formData.email.toLowerCase().trim(),
@@ -40,20 +42,21 @@ const NuevoCliente: React.FC = () => {
         proximaRecompensa: "Postre Gratis (faltan 5 visitas)",
         recompensasCanjeadas: []
       };
-  
+
       console.log('Datos del cliente:', nuevoCliente);
-  
+
       // Crear el cliente en Firestore primero
       const clienteCreado = await apiService.crearCliente(nuevoCliente);
       console.log('Cliente creado en Firestore:', clienteCreado);
-  
+
       // Generar el pase
-      const passUrl = await apiService.generarPase(clienteCreado);
-      console.log('Pase generado:', passUrl);
+      const nuevoPaseUrl = await apiService.generarPase(clienteCreado);
+      console.log('Pase generado:', nuevoPaseUrl);
       
+      setPassUrl(nuevoPaseUrl);
+      setShowQR(true);
       setMessage('¡Cliente registrado exitosamente!');
       
-      // Limpiar formulario
       setFormData({
         nombre: '',
         email: '',
