@@ -17,6 +17,10 @@
       "dest": "/favicon.ico"
     },
     {
+      "src": "/passes/(.*)",
+      "dest": "https://api.leubeautylab.com/passes/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
