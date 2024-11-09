@@ -77,7 +77,7 @@ export const clienteService = {
       } else if (nuevasVisitas < 20) {
         proximaRecompensa = `Gel Liso en Pies`;
       } else {
-        proximaRecompensa = `10% Descuento en Uñas`;
+        proximaRecompensa = `10% Off en Uñas`;
       }
 
       await updateDoc(docRef, {
