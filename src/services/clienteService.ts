@@ -64,7 +64,7 @@ export const clienteService = {
       await updateDoc(docRef, {
         visitas: 0,
         ultimaVisita: Timestamp.fromDate(new Date()),
-        proximaRecompensa: 'Postre Gratis (faltan 5 visitas)'
+        proximaRecompensa: 'Postre Gratis'
       });
     } else {
       // Actualizar normalmente
