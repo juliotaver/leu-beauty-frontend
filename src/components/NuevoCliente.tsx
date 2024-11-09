@@ -80,9 +80,9 @@ const NuevoCliente: React.FC = () => {
 
   const getFullPassUrl = () => {
     if (!passUrl) return '';
-    return `${window.location.protocol}//${window.location.hostname}:3001${passUrl}`;
+    return `${window.location.protocol}//${window.location.hostname}${passUrl}`;
   };
-
+  
   return (
     <div className="min-h-screen bg-leu-cream flex flex-col">
       <div className="max-w-md mx-auto w-full px-4 py-8">
