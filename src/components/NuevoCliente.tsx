@@ -39,7 +39,7 @@ const NuevoCliente: React.FC = () => {
         telefono: formData.telefono.trim(),
         visitas: 0,
         ultimaVisita: new Date(),
-        proximaRecompensa: "Postre Gratis (faltan 5 visitas)",
+        proximaRecompensa: "Postre Gratis",
         recompensasCanjeadas: []
       };
 
