@@ -1,15 +1,17 @@
 export interface Cliente {
-    id: string;
-    nombre: string;
-    email: string;
-    telefono?: string;
-    visitas: number;
-    ultimaVisita: Date;
-    serialNumber: string;
-    fechaRegistro: Date;
-    proximaRecompensa: string;
-    recompensasCanjeadas: string[];
-  }
+  id: string;
+  nombre: string;
+  email: string;
+  telefono?: string;
+  visitas: number;
+  ultimaVisita: Date;
+  proximaRecompensa: string;
+  recompensasCanjeadas: string[];
+  pushToken?: string;
+  deviceLibraryIdentifier?: string;
+  passTypeIdentifier?: string;
+  lastPassUpdate?: Date;
+}
   
   export interface Recompensa {
     visitas: number;

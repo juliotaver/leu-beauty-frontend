@@ -9,9 +9,11 @@ const LoyaltyScanner: React.FC = () => {
   const [message, setMessage] = useState('');
   const [showOptions, setShowOptions] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const processingRef = useRef(false);
   const lastScannedRef = useRef<string>('');
   const scanTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
 
   useEffect(() => {
     let scanner: Html5Qrcode | null = null;
@@ -28,27 +30,23 @@ const LoyaltyScanner: React.FC = () => {
               qrbox: { width: 250, height: 250 }
             },
             async (decodedText) => {
-              // Evitar múltiples escaneos del mismo código
               if (processingRef.current || decodedText === lastScannedRef.current) {
                 return;
               }
 
-              // Establecer el bloqueo
               processingRef.current = true;
               lastScannedRef.current = decodedText;
 
-              // Limpiar el timeout anterior si existe
               if (scanTimeoutRef.current) {
                 clearTimeout(scanTimeoutRef.current);
               }
 
               await handleScan(decodedText);
 
-              // Establecer un nuevo timeout para resetear el último código escaneado
               scanTimeoutRef.current = setTimeout(() => {
                 lastScannedRef.current = '';
                 processingRef.current = false;
-              }, 3000); // 3 segundos de cooldown
+              }, 3000);
 
               if (scanner) {
                 await scanner.stop();
@@ -84,7 +82,6 @@ const LoyaltyScanner: React.FC = () => {
       setLoading(true);
       setMessage('Buscando cliente...');
 
-      // Buscar el cliente
       const cliente = await clienteService.obtenerCliente(scannedId);
 
       if (!cliente) {
@@ -93,29 +90,55 @@ const LoyaltyScanner: React.FC = () => {
         return;
       }
 
-      // Registrar la visita
-      await clienteService.registrarVisita(scannedId);
-      
-      // Obtener el cliente actualizado
-      const clienteActualizado = await clienteService.obtenerCliente(scannedId);
-      
-      if (clienteActualizado) {
-        setCustomer(clienteActualizado);
-        if (clienteActualizado.visitas === 0) {
-          setMessage(`¡Felicitaciones! ${clienteActualizado.nombre} ha completado el ciclo de recompensas!`);
+      try {
+        setMessage('Registrando visita...');
+        setProcessing(true);
+
+        await clienteService.registrarVisita(scannedId);
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        const clienteActualizado = await clienteService.obtenerCliente(scannedId);
+        
+        if (clienteActualizado) {
+          setCustomer(clienteActualizado);
+          
+          if (clienteActualizado.visitas === 0) {
+            setMessage(`¡Felicitaciones! ${clienteActualizado.nombre} ha completado el ciclo de recompensas!`);
+          } else {
+            const proximaVisita = 5 - (clienteActualizado.visitas % 5);
+            setMessage(`¡Visita registrada exitosamente! Faltan ${proximaVisita} visita(s) para la siguiente recompensa.`);
+          }
+
+          console.log('Actualización exitosa:', {
+            clienteId: scannedId,
+            visitasAnteriores: cliente.visitas,
+            visitasNuevas: clienteActualizado.visitas,
+            pushToken: clienteActualizado.pushToken,
+            deviceId: clienteActualizado.deviceLibraryIdentifier
+          });
+        }
+      } catch (error) {
+        console.error('Error específico al registrar visita:', error);
+        
+        if (error instanceof Error) {
+          if (error.message.includes('push') || error.message.includes('token')) {
+            setMessage('La visita se registró pero hubo un problema actualizando el pase. Por favor, vuelva a añadir el pase a Wallet.');
+          } else {
+            setMessage('Error al procesar la visita. Por favor, intente de nuevo.');
+          }
         } else {
-          setMessage('¡Visita registrada exitosamente!');
+          setMessage('Error desconocido al procesar la visita.');
         }
       }
     } catch (error) {
-      console.error('Error al procesar visita:', error);
-      setMessage('Error al procesar la visita. Intente de nuevo.');
+      console.error('Error general en handleScan:', error);
+      setMessage('Error al procesar la visita. Por favor, intente de nuevo.');
     } finally {
       setLoading(false);
+      setProcessing(false);
     }
   };
-
-  // ... resto del código del componente igual ...
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -205,6 +228,15 @@ const LoyaltyScanner: React.FC = () => {
               >
                 Cancelar
               </button>
+            </div>
+          ) : null}
+
+          {loading || processing ? (
+            <div className="text-center py-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-leu-green mx-auto"></div>
+              <p className="text-gray-600 mt-2">
+                {processing ? 'Actualizando pase...' : 'Procesando...'}
+              </p>
             </div>
           ) : null}
 
