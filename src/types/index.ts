@@ -7,6 +7,7 @@ export interface Cliente {
   ultimaVisita: Date;
   proximaRecompensa: string;
   recompensasCanjeadas: string[];
+  fechaRegistro: Date; // Añade esta línea
   pushToken?: string;
   deviceLibraryIdentifier?: string;
   passTypeIdentifier?: string;
