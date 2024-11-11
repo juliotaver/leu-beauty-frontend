@@ -23,15 +23,6 @@ export interface Cliente {
   lastPassUpdate?: Date;
 }
 
-// Crear instancia de axios básica
-const apiClient = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
-});
-
 export const apiService = {
   async crearCliente(cliente: Omit<Cliente, 'id'>): Promise<Cliente> {
     try {
@@ -56,10 +47,18 @@ export const apiService = {
     try {
       console.log('Generando pase para:', cliente);
       
-      const response = await axios.post(`${API_URL}/passes/generate`, {
-        ...cliente,
-        lastPassUpdate: new Date(),
-        passTypeIdentifier: 'pass.com.salondenails.loyalty'
+      const response = await axios({
+        method: 'POST',
+        url: `${API_URL}/passes/generate`,
+        data: {
+          ...cliente,
+          lastPassUpdate: new Date(),
+          passTypeIdentifier: 'pass.com.salondenails.loyalty'
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
       });
 
       console.log('Respuesta del servidor:', response.data);
@@ -87,9 +86,17 @@ export const apiService = {
     try {
       console.log('Solicitando actualización de pase para cliente:', clienteId);
       
-      const response = await axios.post(`${API_URL}/push/update-pass`, {
-        clienteId,
-        timestamp: new Date().toISOString()
+      const response = await axios({
+        method: 'POST',
+        url: `${API_URL}/push/update-pass`,
+        data: {
+          clienteId,
+          timestamp: new Date().toISOString()
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
       });
 
       if (response.status !== 200) {
