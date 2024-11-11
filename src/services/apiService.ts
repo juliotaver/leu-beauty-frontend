@@ -17,16 +17,19 @@ export interface Cliente {
   ultimaVisita: Date;
   proximaRecompensa: string;
   recompensasCanjeadas: string[];
+  pushToken?: string;
+  deviceLibraryIdentifier?: string;
+  passTypeIdentifier?: string;
+  lastPassUpdate?: Date;
 }
 
-// Crear una instancia de axios con configuración base
+// Crear instancia de axios básica
 const apiClient = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
-  },
-  timeout: 10000
+  }
 });
 
 export const apiService = {
@@ -36,7 +39,7 @@ export const apiService = {
       const docRef = await addDoc(collection(db, 'clientes'), {
         ...cliente,
         fechaRegistro: new Date(),
-        lastPassUpdate: new Date() // Agregar este campo
+        lastPassUpdate: new Date()
       });
 
       return {
@@ -53,10 +56,10 @@ export const apiService = {
     try {
       console.log('Generando pase para:', cliente);
       
-      const response = await apiClient.post('/passes/generate', {
+      const response = await axios.post(`${API_URL}/passes/generate`, {
         ...cliente,
-        lastPassUpdate: new Date(), // Añadir timestamp de actualización
-        passTypeIdentifier: 'pass.com.salondenails.loyalty' // Agregar el identificador del pase
+        lastPassUpdate: new Date(),
+        passTypeIdentifier: 'pass.com.salondenails.loyalty'
       });
 
       console.log('Respuesta del servidor:', response.data);
@@ -74,6 +77,7 @@ export const apiService = {
           data: error.response?.data,
           config: error.config
         });
+        throw new Error(error.response?.data?.error || 'Error al generar el pase');
       }
       throw new Error('Error al generar el pase');
     }
@@ -83,16 +87,16 @@ export const apiService = {
     try {
       console.log('Solicitando actualización de pase para cliente:', clienteId);
       
-      const response = await apiClient.post('/push/update-pass', {
+      const response = await axios.post(`${API_URL}/push/update-pass`, {
         clienteId,
         timestamp: new Date().toISOString()
       });
 
-      console.log('Respuesta de actualización:', response.data);
-
       if (response.status !== 200) {
         throw new Error(`Error actualizando pase: ${response.status}`);
       }
+
+      console.log('Respuesta de actualización:', response.data);
     } catch (error) {
       console.error('Error actualizando pase:', error);
       if (axios.isAxiosError(error)) {
