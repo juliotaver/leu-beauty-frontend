@@ -1,10 +1,15 @@
+// apiService.ts
 import axios from 'axios';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
-const API_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:3001/api'
-  : 'https://api.leubeautylab.com/api';
+// Exportar las constantes de URL
+export const BASE_URL = process.env.NODE_ENV === 'development' 
+  ? 'http://localhost:3001'
+  : 'https://api.leubeautylab.com';
+
+export const API_URL = `${BASE_URL}/api`;
+export const WEB_SERVICE_URL = `${BASE_URL}/v1`;
 
 console.log('API URL:', API_URL);
 
@@ -24,6 +29,9 @@ export interface Cliente {
 }
 
 export const apiService = {
+  API_URL,  // Exponer API_URL como parte del objeto apiService
+  WEB_SERVICE_URL,  // Exponer WEB_SERVICE_URL como parte del objeto apiService
+
   async crearCliente(cliente: Omit<Cliente, 'id'>): Promise<Cliente> {
     try {
       console.log('Creando cliente en Firestore:', cliente);

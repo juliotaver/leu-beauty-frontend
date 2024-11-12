@@ -10,6 +10,7 @@ import {
 } from 'firebase/firestore';
 import { Cliente } from '../types';
 import axios from 'axios';
+import { BASE_URL } from '../services/apiService';  // Importar BASE_URL en su lugar
 
 export const clienteService = {
   async crearCliente(cliente: Omit<Cliente, 'id'>): Promise<string> {
@@ -101,7 +102,7 @@ export const clienteService = {
 
       console.log('Enviando solicitud de actualización de pase para cliente:', id);
       
-      const response = await axios.post('https://api.leubeautylab.com/api/push/update-pass', 
+      const response = await axios.post(`${BASE_URL}/api/push/update-pass`, 
         { clienteId: id },
         {
           headers: {
