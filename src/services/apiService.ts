@@ -4,9 +4,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 // Exportar las constantes de URL
-export const BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:3001'
-  : 'https://api.leubeautylab.com';
+export const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export const API_URL = `${BASE_URL}/api`;
 export const WEB_SERVICE_URL = `${BASE_URL}/v1`;
