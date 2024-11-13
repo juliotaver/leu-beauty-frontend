@@ -6,7 +6,7 @@ import { db } from '../firebase';
 // Exportar las constantes de URL
 export const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
-export const API_URL = `${BASE_URL}/api`;
+export const API_URL = process.env.REACT_APP_API_URL || BASE_URL;
 export const WEB_SERVICE_URL = `${BASE_URL}/v1`;
 
 console.log('API URL:', API_URL);
